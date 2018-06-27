@@ -1,14 +1,32 @@
 'use strict';
+let bodyParser = require('body-parser')
+
 
 let express = require('express');
 let app = express();
 
+const brenda = {
+    name: 'brenda',
+    email: 'brenda@gmail.com',
+    password: 'brenda',
+    token:'123'
+};
+
 app.listen(3000);
 app.use(express.static(__dirname + '/app_client'));
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+})); 
 
 app.post('/api/login',(req,res)=>{
-    console.log("login");
-    res.send("login ;D");
+    const userLogin=req.body;
+    if(userLogin.password === brenda.password && userLogin.email === brenda.email){
+        res.send(brenda);       
+    }else{
+        res.status(500);
+        res.send('No soy brenda');
+    }    
 });
 
 app.post('/api/register', (req,res)=>{
@@ -21,7 +39,7 @@ app.get('/logout', (req,res)=>{
 });
 app.get('/api/profile', (req,res)=>{
     console.log("profile");
-    res.send("profile");
+    res.send(brenda);
 });
 
 // app.get('*',(req,res)=>{
